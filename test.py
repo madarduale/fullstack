@@ -177,3 +177,13 @@ from datetime import datetime, timedelta, date, time, timezone
 
 
 
+def search_venue_by_city_state():
+    search = 'SAN'
+    data = Venue.query.filter(Venue.name.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.city.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.state.ilike(f'%{search}%')).all()
+    print(data)
+    for venue in data:
+        print(venue.name)
+    # print(data)
+    count = len(data)
+    print(count)
+search_venue_by_city_state()

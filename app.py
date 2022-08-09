@@ -146,7 +146,7 @@ def search_venues():
   # search for "Music" should return "The Musical Hop" and "Park Square Live Music & Coffee"
 
   search = request.form.get('search_term')
-  data = Venue.query.filter(Venue.name.ilike(f'%{search}%')).all()
+  data = Venue.query.filter(Venue.name.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.city.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.state.ilike(f'%{search}%')).all()
   count = len(data)
 
   return render_template('pages/search_venues.html', results=data, search_term=search, count=count)
@@ -264,7 +264,7 @@ def search_artists():
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
     search = request.form.get('search_term')
-    data = Artist.query.filter(Artist.name.ilike(f'%{search}%')).all()
+    data = Artist.query.filter(Artist.name.ilike(f'%{search}%')).all() or Artist.query.filter(Artist.city.ilike(f'%{search}%')).all() or Artist.query.filter(Artist.state.ilike(f'%{search}%')).all()
     count = len(data)
 
     return render_template('pages/search_artists.html', results=data, search_term=search,count=count)
