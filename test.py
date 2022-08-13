@@ -177,13 +177,65 @@ from datetime import datetime, timedelta, date, time, timezone
 
 
 
-def search_venue_by_city_state():
-    search = 'SAN'
-    data = Venue.query.filter(Venue.name.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.city.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.state.ilike(f'%{search}%')).all()
-    print(data)
-    for venue in data:
-        print(venue.name)
-    # print(data)
-    count = len(data)
-    print(count)
-search_venue_by_city_state()
+# def search_venue_by_city_state():
+#     search = 'SAN'
+#     data = Venue.query.filter(Venue.name.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.city.ilike(f'%{search}%')).all() or Venue.query.filter(Venue.state.ilike(f'%{search}%')).all()
+#     print(data)
+#     for venue in data:
+#         print(venue.name)
+#     # print(data)
+#     count = len(data)
+#     print(count)
+# search_venue_by_city_state()
+
+def show_venue(venue_id):
+  
+    data=Venue.query.get(venue_id)
+    past_shows_query=db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show.start_time<datetime.now()).all()
+    upcoming_shows_query=db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show.start_time>=datetime.now()).all()
+    past_shows=[]
+    upcoming_shows=[]
+    for show in past_shows_query:
+      past_shows.append({
+        "artist_id": show.artist_id,
+        "artist_name": show.artist.name,
+        "artist_image_link": show.artist.image_link,
+        "start_time": show.start_time.strftime('%Y-%m-%d %H:%M:%S')
+      })
+    for show in upcoming_shows_query:
+      upcoming_shows.append({
+        "artist_id": show.artist_id,
+        "artist_name": show.artist.name,
+        "artist_image_link": show.artist.image_link,
+        "start_time": show.start_time.strftime('%Y-%m-%d %H:%M:%S')
+      })
+    upcoming_shows_count=len(upcoming_shows)
+    past_shows_count=len(past_shows)
+    data1={
+      "id": data.id,
+      "name": data.name,
+      "genres": data.genres,
+      "address": data.address,
+      "city": data.city,
+      "state": data.state,
+      "phone": data.phone,
+      "website": data.website,
+      "facebook_link": data.facebook_link,
+      "seeking_talent": data.seeking_talent,
+      "seeking_description": data.seeking_description,
+      "image_link": data.image_link,
+      "past_shows": past_shows,
+      "upcoming_shows": upcoming_shows,
+      "past_shows_count": past_shows_count,
+      "upcoming_shows_count": upcoming_shows_count,
+      
+    }
+    
+    for show in data1['past_shows']:
+       
+        print(show['artist_id'])
+        print(show['artist_name'])
+        
+        print("\n")
+    print(data1["genres"])
+show_venue(1)
